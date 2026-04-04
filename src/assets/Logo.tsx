@@ -4,75 +4,115 @@ type Props = {
 };
 
 export const Logo = ({ variant = 'default', size = 28 }: Props) => {
+  // Shared defs used in both variants.
+  // id prefix avoids duplicate-id conflicts when both variants
+  // are mounted simultaneously (e.g. responsive nav).
+  const prefix = variant === 'icon' ? 'ml-i-' : 'ml-d-';
+
+  const SharedDefs = () => (
+    <defs>
+      <radialGradient id={`${prefix}moonGlow`} cx='50%' cy='50%' r='50%'>
+        <stop offset='0%' stopColor='#ffe8a0' stopOpacity='0.5' />
+        <stop offset='100%' stopColor='#ffe8a0' stopOpacity='0' />
+      </radialGradient>
+
+      <radialGradient id={`${prefix}moonSurface`} cx='36%' cy='32%' r='62%'>
+        <stop offset='0%' stopColor='#fff8dc' />
+        <stop offset='55%' stopColor='#fde88a' />
+        <stop offset='100%' stopColor='#e8c14a' />
+      </radialGradient>
+
+      <linearGradient id={`${prefix}cloudGrad`} x1='0%' y1='0%' x2='0%' y2='100%'>
+        <stop offset='0%' stopColor='#c8d8f0' stopOpacity='0.92' />
+        <stop offset='100%' stopColor='#8aaad4' stopOpacity='0.72' />
+      </linearGradient>
+
+      <filter id={`${prefix}glow`} x='-50%' y='-50%' width='200%' height='200%'>
+        <feGaussianBlur stdDeviation='2' result='blur' />
+        <feMerge>
+          <feMergeNode in='blur' />
+          <feMergeNode in='SourceGraphic' />
+        </feMerge>
+      </filter>
+
+      <filter id={`${prefix}cloudShadow`} x='-20%' y='-20%' width='140%' height='140%'>
+        <feDropShadow dx='0' dy='1' stdDeviation='1' floodColor='#0a1a3a' floodOpacity='0.35' />
+      </filter>
+
+      {/* Crescent mask: visible circle minus offset cutout */}
+      <mask id={`${prefix}crescent`}>
+        <circle cx='22' cy='15' r='10' fill='white' />
+        <circle cx='28.5' cy='11' r='8' fill='black' />
+      </mask>
+    </defs>
+  );
+
+  // The logogram fits the 60 × 41 coordinate space used by both variants.
+  const Logogram = () => (
+    <g id='logogram'>
+      <SharedDefs />
+
+      {/* Stars */}
+      <circle cx='5'  cy='4'  r='0.75' fill='var(--foreground)' opacity='0.35' />
+      <circle cx='14' cy='2'  r='0.55' fill='var(--foreground)' opacity='0.28' />
+      <circle cx='45' cy='3'  r='0.65' fill='var(--foreground)' opacity='0.30' />
+      <circle cx='52' cy='10' r='0.50' fill='var(--foreground)' opacity='0.25' />
+      <circle cx='50' cy='2'  r='0.45' fill='var(--foreground)' opacity='0.22' />
+
+      {/* Moon ambient halo */}
+      <circle
+        cx='22' cy='15' r='15'
+        fill={`url(#${prefix}moonGlow)`}
+      />
+
+      {/* Crescent moon */}
+      <g filter={`url(#${prefix}glow)`}>
+        <circle
+          cx='22' cy='15' r='10'
+          fill={`url(#${prefix}moonSurface)`}
+          mask={`url(#${prefix}crescent)`}
+        />
+      </g>
+
+      {/* Cloud */}
+      <g filter={`url(#${prefix}cloudShadow)`} opacity='0.90'>
+        <circle cx='12' cy='34' r='5'   fill={`url(#${prefix}cloudGrad)`} />
+        <circle cx='22' cy='32' r='6'   fill={`url(#${prefix}cloudGrad)`} />
+        <circle cx='33' cy='31' r='6.5' fill={`url(#${prefix}cloudGrad)`} />
+        <circle cx='44' cy='33' r='5'   fill={`url(#${prefix}cloudGrad)`} />
+        <rect x='9' y='33' width='38' height='7' rx='3.5'
+          fill={`url(#${prefix}cloudGrad)`}
+        />
+      </g>
+    </g>
+  );
+
   if (variant === 'default') {
     return (
       <svg
         data-logo='logo'
         xmlns='http://www.w3.org/2000/svg'
-        viewBox='0 0 64 64'
+        viewBox='0 0 232 43'
         height={size}
       >
-        <defs>
-          <radialGradient id='bgGrad' cx='40%' cy='35%' r='65%'>
-            <stop offset='0%' stopColor='#1a2a4a' />
-            <stop offset='100%' stopColor='#060d1f' />
-          </radialGradient>
-
-          <radialGradient id='moonGlow' cx='50%' cy='50%' r='50%'>
-            <stop offset='0%' stopColor='#ffe8a0' stopOpacity='0.55' />
-            <stop offset='100%' stopColor='#ffe8a0' stopOpacity='0' />
-          </radialGradient>
-
-          <radialGradient id='moonSurface' cx='38%' cy='35%' r='60%'>
-            <stop offset='0%' stopColor='#fff7d6' />
-            <stop offset='60%' stopColor='#fde88a' />
-            <stop offset='100%' stopColor='#e8c14a' />
-          </radialGradient>
-
-          <linearGradient id='cloudGrad' x1='0%' y1='0%' x2='0%' y2='100%'>
-            <stop offset='0%' stopColor='#c8d8f0' stopOpacity='0.92' />
-            <stop offset='100%' stopColor='#8aaad4' stopOpacity='0.75' />
-          </linearGradient>
-
-          <filter id='cloudShadow' x='-20%' y='-20%' width='140%' height='140%'>
-            <feDropShadow dx='0' dy='1' stdDeviation='1.5' floodColor='#0a1a3a' floodOpacity='0.4' />
-          </filter>
-
-          <filter id='glowFilter' x='-40%' y='-40%' width='180%' height='180%'>
-            <feGaussianBlur stdDeviation='3.5' result='blur' />
-            <feMerge>
-              <feMergeNode in='blur' />
-              <feMergeNode in='SourceGraphic' />
-            </feMerge>
-          </filter>
-        </defs>
-
-        <rect width='64' height='64' rx='14' fill='url(#bgGrad)' />
-
-        <circle cx='10' cy='10' r='0.9' fill='#ffffff' opacity='0.85' />
-        <circle cx='52' cy='8' r='0.7' fill='#ffffff' opacity='0.7' />
-        <circle cx='55' cy='20' r='0.5' fill='#ffe8a0' opacity='0.9' />
-        <circle cx='8' cy='28' r='0.6' fill='#ffffff' opacity='0.6' />
-        <circle cx='48' cy='13' r='0.4' fill='#ffffff' opacity='0.75' />
-        <circle cx='18' cy='7' r='0.5' fill='#ffe8a0' opacity='0.65' />
-
-        <circle cx='34' cy='24' r='17' fill='url(#moonGlow)' />
-
-        <g filter='url(#glowFilter)'>
-          <circle cx='34' cy='24' r='13' fill='url(#moonSurface)' />
-          <circle cx='40' cy='20' r='10.5' fill='#0e1d3a' />
+        {/* Logogram — same 60 × 41 footprint as the original, shifted down 1 px */}
+        <g transform='translate(0, 1)'>
+          <Logogram />
         </g>
 
-        <circle cx='27' cy='22' r='1.1' fill='#e8c14a' opacity='0.4' />
-        <circle cx='25' cy='30' r='0.7' fill='#e0b83a' opacity='0.3' />
-
-        <g filter='url(#cloudShadow)' opacity='0.93'>
-          <circle cx='22' cy='48' r='7.5' fill='url(#cloudGrad)' />
-          <circle cx='36' cy='47' r='8.5' fill='url(#cloudGrad)' />
-          <circle cx='48' cy='49' r='6.5' fill='url(#cloudGrad)' />
-          <rect x='15' y='48' width='40' height='10' rx='5' fill='url(#cloudGrad)' />
-          <circle cx='29' cy='45' r='7' fill='url(#cloudGrad)' />
-          <circle cx='42' cy='44' r='6' fill='url(#cloudGrad)' />
+        {/* Wordmark — positioned identically to the original logotype group */}
+        <g id='logotype' transform='translate(66, 8.5)'>
+          <text
+            fill='var(--foreground)'
+            fontFamily='"Inter", "Helvetica Neue", Arial, sans-serif'
+            fontSize='26'
+            fontWeight='700'
+            letterSpacing='-1'
+            dominantBaseline='auto'
+            y='26'
+          >
+            Moonlight
+          </text>
         </g>
       </svg>
     );
@@ -81,71 +121,10 @@ export const Logo = ({ variant = 'default', size = 28 }: Props) => {
       <svg
         data-logo='logo'
         xmlns='http://www.w3.org/2000/svg'
-        viewBox='0 0 64 64'
+        viewBox='0 0 60 41'
         height={size}
       >
-        <defs>
-          <radialGradient id='bgGrad' cx='40%' cy='35%' r='65%'>
-            <stop offset='0%' stopColor='#1a2a4a' />
-            <stop offset='100%' stopColor='#060d1f' />
-          </radialGradient>
-
-          <radialGradient id='moonGlow' cx='50%' cy='50%' r='50%'>
-            <stop offset='0%' stopColor='#ffe8a0' stopOpacity='0.55' />
-            <stop offset='100%' stopColor='#ffe8a0' stopOpacity='0' />
-          </radialGradient>
-
-          <radialGradient id='moonSurface' cx='38%' cy='35%' r='60%'>
-            <stop offset='0%' stopColor='#fff7d6' />
-            <stop offset='60%' stopColor='#fde88a' />
-            <stop offset='100%' stopColor='#e8c14a' />
-          </radialGradient>
-
-          <linearGradient id='cloudGrad' x1='0%' y1='0%' x2='0%' y2='100%'>
-            <stop offset='0%' stopColor='#c8d8f0' stopOpacity='0.92' />
-            <stop offset='100%' stopColor='#8aaad4' stopOpacity='0.75' />
-          </linearGradient>
-
-          <filter id='cloudShadow' x='-20%' y='-20%' width='140%' height='140%'>
-            <feDropShadow dx='0' dy='1' stdDeviation='1.5' floodColor='#0a1a3a' floodOpacity='0.4' />
-          </filter>
-
-          <filter id='glowFilter' x='-40%' y='-40%' width='180%' height='180%'>
-            <feGaussianBlur stdDeviation='3.5' result='blur' />
-            <feMerge>
-              <feMergeNode in='blur' />
-              <feMergeNode in='SourceGraphic' />
-            </feMerge>
-          </filter>
-        </defs>
-
-        <rect width='64' height='64' rx='14' fill='url(#bgGrad)' />
-
-        <circle cx='10' cy='10' r='0.9' fill='#ffffff' opacity='0.85' />
-        <circle cx='52' cy='8' r='0.7' fill='#ffffff' opacity='0.7' />
-        <circle cx='55' cy='20' r='0.5' fill='#ffe8a0' opacity='0.9' />
-        <circle cx='8' cy='28' r='0.6' fill='#ffffff' opacity='0.6' />
-        <circle cx='48' cy='13' r='0.4' fill='#ffffff' opacity='0.75' />
-        <circle cx='18' cy='7' r='0.5' fill='#ffe8a0' opacity='0.65' />
-
-        <circle cx='34' cy='24' r='17' fill='url(#moonGlow)' />
-
-        <g filter='url(#glowFilter)'>
-          <circle cx='34' cy='24' r='13' fill='url(#moonSurface)' />
-          <circle cx='40' cy='20' r='10.5' fill='#0e1d3a' />
-        </g>
-
-        <circle cx='27' cy='22' r='1.1' fill='#e8c14a' opacity='0.4' />
-        <circle cx='25' cy='30' r='0.7' fill='#e0b83a' opacity='0.3' />
-
-        <g filter='url(#cloudShadow)' opacity='0.93'>
-          <circle cx='22' cy='48' r='7.5' fill='url(#cloudGrad)' />
-          <circle cx='36' cy='47' r='8.5' fill='url(#cloudGrad)' />
-          <circle cx='48' cy='49' r='6.5' fill='url(#cloudGrad)' />
-          <rect x='15' y='48' width='40' height='10' rx='5' fill='url(#cloudGrad)' />
-          <circle cx='29' cy='45' r='7' fill='url(#cloudGrad)' />
-          <circle cx='42' cy='44' r='6' fill='url(#cloudGrad)' />
-        </g>
+        <Logogram />
       </svg>
     );
   }

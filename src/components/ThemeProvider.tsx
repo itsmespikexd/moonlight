@@ -43,7 +43,31 @@ export const ThemeProvider = ({
             root.classList.add(systemTheme);
             return;
         }
+
+        root.classList.add(theme);
     }, [theme]);
 
-    return <div>Theme Provider</div>
+    const value = {
+        theme,
+        setTheme: (theme: Theme) => {
+            localStorage.setItem(storageKey, theme);
+            setTheme(theme)
+        }
+    }
+
+    return (
+        <ThemeProviderContext {...props} value={value}>
+            {children}
+        </ThemeProviderContext>
+    )
+}
+
+export const useTheme = () => {
+    const context = useContext(ThemeProviderContext);
+
+    if (context === undefined) {
+        throw new Error('useTheme must be used within a ThemeProvider');
+    }
+
+    return context;
 }
