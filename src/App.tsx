@@ -23,6 +23,12 @@ export const App = () => {
             </div>
           </div>
         </main>
+
+        <footer className='pb-5'>
+          <p className="text-center text-muted-foreground">
+            &copy; 2026 <a href='https://youtu.be/dQw4w9WgXcQ?si=vVjT2BkoV0sFN7Xu' target="_blank">Spike :3</a>
+          </p>
+        </footer>
       </WeatherProvider>
     </ThemeProvider>
   );
