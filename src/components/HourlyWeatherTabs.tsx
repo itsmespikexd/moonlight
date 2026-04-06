@@ -9,6 +9,7 @@ import { WindChart } from "@/components/WindChart";
 import { HumidityChart } from "@/components/HumidityChart";
 import { CloudCoverChart } from "@/components/CloudCoverChart";
 import { PressureChart } from "@/components/PressureChart";
+import { UVIndexChart } from "@/components/UVIndexChart";
 
 type Tab =
   |  'overview'
@@ -141,6 +142,17 @@ export const HourlyWeatherTabs = () => {
                     </CardHeader>
                     <CardContent>
                         <PressureChart />
+                    </CardContent>
+                </Card>
+            </TabsContent>
+
+            <TabsContent value='uv'>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>UV</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <UVIndexChart />
                     </CardContent>
                 </Card>
             </TabsContent>
