@@ -38,9 +38,9 @@ const initialState: WeatherProviderState = {
 export const WeatherProviderContext = createContext<WeatherProviderState>(initialState);
 
 export const WeatherProvider = ({ children }: React.PropsWithChildren) => {
-    const defaultLat = WEATHER_API.DEFAULTS.LAT;
-    const defaultLon = WEATHER_API.DEFAULTS.LON;
-    const defaultUnit = WEATHER_API.DEFAULTS.UNIT;
+    const defaultLat = Number(localStorage.getItem(APP.STORE_KEY.LAT)) || WEATHER_API.DEFAULTS.LAT;
+    const defaultLon = Number(localStorage.getItem(APP.STORE_KEY.LON)) || WEATHER_API.DEFAULTS.LON;
+    const defaultUnit = localStorage.getItem(APP.STORE_KEY.UNIT) as WeatherUnitType || WEATHER_API.DEFAULTS.UNIT;
 
     const [weather, setWeather] = useState<Weather | null>(null);
 
@@ -88,7 +88,11 @@ export const WeatherProvider = ({ children }: React.PropsWithChildren) => {
         (async () => await getWeather({}))();
     }, [getWeather]);
 
-    console.log(weather)
 
-    return <div>rr</div>
+
+    return (
+        <WeatherProviderContext value={{ weather, setWeather: getWeather }}>
+            {children}
+        </WeatherProviderContext>
+    )
 }

@@ -3,6 +3,8 @@ import { APP, WEATHER_API } from "@/config";
 
 import { useEffect, useCallback, useState } from "react";
 
+import { useWeather } from "@/hooks/useWeather";
+
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogClose, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
@@ -14,6 +16,7 @@ import { MapPinnedIcon, SearchIcon } from "lucide-react";
 import type { Geocoding } from "@/types";
 
 export const SearchDialog = () => {
+    const { setWeather } = useWeather();
 
     const [search, setSearch] = useState<string>('');
     const [results, setResults] = useState<Geocoding[]>([]);
@@ -120,7 +123,11 @@ export const SearchDialog = () => {
                                         variant='ghost' 
                                         size='icon'
                                         className='after:absolute after:inset-0'
-                                        onClick={() => {}}>
+                                        onClick={() => {
+                                            setWeather({ lat, lon });
+                                            localStorage.setItem(APP.STORE_KEY.LAT, lat.toString());
+                                            localStorage.setItem(APP.STORE_KEY.LON, lon.toString());
+                                        }}>
                                             <MapPinnedIcon />
                                         </Button>
                                     </DialogClose>

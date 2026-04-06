@@ -2,13 +2,23 @@ import { APP, WEATHER_API } from "@/config";
 
 import { useEffect, useState } from "react";
 
+import { useWeather } from "@/hooks/useWeather";
+
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-
+import type { WeatherUnitType } from "@/components/WeatherProvider";
 
 export const UnitDropdown = () => {
-    const [unit, setUnit] = useState<string>(WEATHER_API.DEFAULTS.UNIT);
+    const { setWeather } = useWeather();
+
+    const [unit, setUnit] = useState<WeatherUnitType>(localStorage.getItem(APP.STORE_KEY.UNIT) as WeatherUnitType || WEATHER_API.DEFAULTS.UNIT);
+
+    useEffect(() => {
+        setWeather({ unit });
+
+        localStorage.setItem(APP.STORE_KEY.UNIT, unit);
+    }, [unit])
     
     return (
         <DropdownMenu>
@@ -20,7 +30,7 @@ export const UnitDropdown = () => {
 
             <DropdownMenuContent align='end' className="w-[200px]">
                 <DropdownMenuLabel className='text-muted-foreground'>Weather Settings</DropdownMenuLabel>
-                <DropdownMenuRadioGroup value={unit} onValueChange={(value) => setUnit(value)}>
+                <DropdownMenuRadioGroup value={unit} onValueChange={(value) => setUnit(value as WeatherUnitType)}>
                     <DropdownMenuRadioItem value='metric'>Metric (°C)</DropdownMenuRadioItem>
                     <DropdownMenuRadioItem value='imperial'>Imperial(°F)</DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
