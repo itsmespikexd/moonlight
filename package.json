@@ -1,5 +1,6 @@
 {
   "name": "moonlight",
+  "homepage": "https://itsmespikexd.github.io/moonlight/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,7 +8,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
@@ -17,6 +20,7 @@
     "axios": "^1.14.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "gh-pages": "^6.3.0",
     "lucide-react": "^1.7.0",
     "mapbox-gl": "^3.21.0",
     "radix-ui": "^1.4.3",
