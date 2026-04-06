@@ -6,15 +6,17 @@ import { useRef, useEffect, useState, useMemo } from 'react';
 import { useTheme } from '@/components/ThemeProvider';
 import { useWeather } from '@/hooks/useWeather';
 
+import { Marker } from '@/components/Marker';
+
 import type { LngLatLike, Map as MapType } from 'mapbox-gl';
 
 export const Map = () => {
     const { theme } = useTheme();
     const { weather } = useWeather();
 
-    const center = useMemo<LngLatLike>(() => weather ? 
-    [weather.location.lon, weather.location.lat] : 
-    MAPBOX.DEFAULTS.CENTER, [weather])
+    const center = useMemo<LngLatLike>(() => weather ?
+        [weather.location.lon, weather.location.lat] :
+        MAPBOX.DEFAULTS.CENTER, [weather])
 
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -30,7 +32,6 @@ export const Map = () => {
                 container: mapContainerRef.current,
                 center,
                 zoom: MAPBOX.DEFAULTS.ZOOM,
-                style: 'mapbox://styles/mapbox/standard',
                 config: {
                     basemap: {
                         lightPreset: theme === 'light' ? 'day' : 'night',
@@ -42,5 +43,11 @@ export const Map = () => {
         return () => map?.remove();
     }, [theme, center]);
 
-    return <div ref={mapContainerRef} className="h-[300px] bg-card text-card-foreground rounded-xl border overflow-hidden shadow-sm"></div>
+    return (
+        <div ref={mapContainerRef} className="h-[300px] bg-card text-card-foreground rounded-xl border overflow-hidden shadow-sm">
+            {map && (
+                <Marker map={map} coordinates={center}/>
+            )}
+        </div>
+    )
 }
