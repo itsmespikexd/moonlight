@@ -6,6 +6,9 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { OverviewChart } from "@/components/OverviewChart";
 import { PrecipitationChart } from "@/components/PrecipitationChart";
 import { WindChart } from "@/components/WindChart";
+import { HumidityChart } from "@/components/HumidityChart";
+import { CloudCoverChart } from "@/components/CloudCoverChart";
+import { PressureChart } from "@/components/PressureChart";
 
 type Tab =
   |  'overview'
@@ -105,6 +108,39 @@ export const HourlyWeatherTabs = () => {
                     </CardHeader>
                     <CardContent>
                         <WindChart />
+                    </CardContent>
+                </Card>
+            </TabsContent>
+
+            <TabsContent value='humidity'>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Humidity</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <HumidityChart />
+                    </CardContent>
+                </Card>
+            </TabsContent>
+
+            <TabsContent value='cloudCover'>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Cloud cover</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <CloudCoverChart />
+                    </CardContent>
+                </Card>
+            </TabsContent>
+
+            <TabsContent value='pressure'>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Pressure</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <PressureChart />
                     </CardContent>
                 </Card>
             </TabsContent>

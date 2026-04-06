@@ -30,8 +30,6 @@ export const PrecipitationChart = () => {
         }));
     }, [weather]);
 
-    console.log(chartData)
-
     if (!chartData) return <Skeleton className='h-[360px]' />
 
     return (
@@ -56,8 +54,9 @@ export const PrecipitationChart = () => {
                     dataKey='pop'
                     tickLine={false}
                     axisLine={false}
-                    tickCount={4}
-                    tickMargin={16}
+                    tickCount={5}
+                    tickMargin={8}
+                    tickFormatter={(value) => value + ' mm'}
                 />
 
                 <ChartTooltip

@@ -8,24 +8,19 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { ChartConfig } from "@/components/ui/chart";
 
 const chartConfig = {
-    temp: {
-        label: 'Temperature',
-        color: 'var(--chart-1)',
-    },
-    feels: {
-        label: 'Feels like',
-        color: 'var(--muted-foreground)',
+    pressure: {
+        label: 'Pressure',
+        color: 'var(--pressure)',
     }
 } satisfies ChartConfig
 
-export const OverviewChart = () => {
+export const PressureChart = () => {
     const { weather } = useWeather();
 
     const chartData = useMemo(() => {
         return weather?.hourly.map((item) => ({
             hour: item.dt,
-            temp: item.temp.toFixed(),
-            feels: item.feels_like.toFixed(),
+            pressure: item.pressure,
         }));
     }, [weather]);
 
@@ -42,7 +37,7 @@ export const OverviewChart = () => {
                     axisLine={false}
                     tickCount={12}
                     tickMargin={16}
-                    tickFormatter={(value) => 
+                    tickFormatter={(value) =>
                         new Date(value * 1000).toLocaleTimeString('en-US', {
                             hour: 'numeric', hour12: true
                         })
@@ -50,12 +45,12 @@ export const OverviewChart = () => {
                 />
 
                 <YAxis
-                    dataKey='temp'
+                    dataKey='pressure'
                     tickLine={false}
                     axisLine={false}
-                    tickCount={4}
-                    tickMargin={16}
-                    tickFormatter={(value) => `${value}°`}
+                    tickCount={3}
+                    tickMargin={4}
+                    tickFormatter={(value) => `${value} hPa`}
                 />
 
                 <ChartTooltip
@@ -64,16 +59,13 @@ export const OverviewChart = () => {
                 />
 
                 <defs>
-                    <linearGradient id='fillTemp' x1={0} y1={0} x2={0} y2={1}>
-                        <stop offset='0%' stopColor='var(--temp-high)' stopOpacity={1} />
-                        <stop offset='50%' stopColor='var(--temp-mid)' stopOpacity={1} />
-                        <stop offset='100%' stopColor='var(--temp-low)' stopOpacity={1} />
+                    <linearGradient id='fillPressure' x1={0} y1={0} x2={0} y2={1}>
+                        <stop offset='0%' stopColor='var(--color-pressure)' stopOpacity={1} />
+                        <stop offset='100%' stopColor='var(--color-pressure)' stopOpacity={0} />
                     </linearGradient>
                 </defs>
 
-                <Area dataKey='temp' type='natural' fill='url(#fillTemp)' fillOpacity={0.5} stroke='var(--color-temp)' strokeOpacity={0} />
-                <Area dataKey='feels' type='natural' fillOpacity={0} stroke='var(--color-feels)' strokeOpacity={2} activeDot={false} />
-
+                <Area dataKey='pressure' type='natural' fill='url(#fillPressure)' fillOpacity={0.5} stroke='var(--color-pressure)' strokeOpacity={0} />
                 <ChartLegend content={<ChartLegendContent />} />
             </AreaChart>
         </ChartContainer>

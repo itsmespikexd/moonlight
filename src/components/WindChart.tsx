@@ -12,9 +12,9 @@ const chartConfig = {
         label: 'Wind speed',
         color: 'var(--wind-speed)',
     },
-    wind_gusts: {
-        label: 'Feels like',
-        color: 'var(--wind-gusts)',
+    wind_gust: {
+        label: 'Wind gust',
+        color: 'var(--wind-gust)',
     }
 } satisfies ChartConfig
 
@@ -24,12 +24,11 @@ export const WindChart = () => {
     const chartData = useMemo(() => {
         return weather?.hourly.map((item) => ({
             hour: item.dt,
-            temp: item.temp.toFixed(),
-            feels: item.feels_like.toFixed(),
+            wind_speed: item.wind_speed,
+            wind_gust: item.wind_gust,
+            wind_deg: item.wind_deg,
         }));
     }, [weather]);
-
-    console.log(chartData)
 
     if (!chartData) return <Skeleton className='h-[360px]' />
 
@@ -52,12 +51,11 @@ export const WindChart = () => {
                 />
 
                 <YAxis
-                    dataKey='temp'
+                    dataKey='wind_speed'
                     tickLine={false}
                     axisLine={false}
                     tickCount={4}
                     tickMargin={16}
-                    tickFormatter={(value) => `${value}°`}
                 />
 
                 <ChartTooltip
@@ -66,14 +64,14 @@ export const WindChart = () => {
                 />
 
                 <defs>
-                    <linearGradient id='fillTemp' x1={0} y1={0} x2={0} y2={1}>
-                        <stop offset='0%' stopColor='var(--temp-high)' stopOpacity={1} />
-                        <stop offset='50%' stopColor='var(--temp-mid)' stopOpacity={1} />
-                        <stop offset='100%' stopColor='var(--temp-low)' stopOpacity={1} />
+                    <linearGradient id='fillWindSpeed' x1={0} y1={0} x2={0} y2={1}>
+                        <stop offset='0%' stopColor='var(--color-wind_speed)' stopOpacity={1} />
+                        <stop offset='100%' stopColor='var(--color-wind_speed)' stopOpacity={0} />
                     </linearGradient>
                 </defs>
 
-                <Area dataKey='temp' type='natural' fill='url(#fillTemp)' fillOpacity={0.5} stroke='var(--color-temp)' strokeOpacity={0} />
+                <Area dataKey='wind_speed' type='natural' fill='url(#fillWindSpeed)' fillOpacity={0.5} stroke='var(--color-wind_speed)' strokeOpacity={0} />
+                <Area dataKey='wind_gust' type='natural' fill='var(--color-wind_gust)' fillOpacity={0} stroke='var(--color-wind_gust)' strokeOpacity={2} activeDot={false} />
                 <Area dataKey='feels' type='natural' fillOpacity={0} stroke='var(--color-feels)' strokeOpacity={2} activeDot={false} />
 
                 <ChartLegend content={<ChartLegendContent />} />

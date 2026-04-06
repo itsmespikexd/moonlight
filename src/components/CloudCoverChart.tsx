@@ -1,31 +1,26 @@
 import { useMemo } from "react";
 import { useWeather } from "@/hooks/useWeather";
 
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import type { ChartConfig } from "@/components/ui/chart";
 
 const chartConfig = {
-    temp: {
-        label: 'Temperature',
-        color: 'var(--chart-1)',
-    },
-    feels: {
-        label: 'Feels like',
-        color: 'var(--muted-foreground)',
+    clouds: {
+        label: 'Cloud cover',
+        color: 'var(--clouds)',
     }
 } satisfies ChartConfig
 
-export const OverviewChart = () => {
+export const CloudCoverChart = () => {
     const { weather } = useWeather();
 
     const chartData = useMemo(() => {
         return weather?.hourly.map((item) => ({
             hour: item.dt,
-            temp: item.temp.toFixed(),
-            feels: item.feels_like.toFixed(),
+            clouds: item.clouds,
         }));
     }, [weather]);
 
@@ -33,7 +28,7 @@ export const OverviewChart = () => {
 
     return (
         <ChartContainer config={chartConfig} className='h-[360px] w-full'>
-            <AreaChart accessibilityLayer data={chartData}>
+            <BarChart accessibilityLayer data={chartData} barSize={28} barCategoryGap={0}>
                 <CartesianGrid strokeDasharray='4' />
 
                 <XAxis
@@ -50,12 +45,10 @@ export const OverviewChart = () => {
                 />
 
                 <YAxis
-                    dataKey='temp'
+                    dataKey='clouds'
                     tickLine={false}
                     axisLine={false}
-                    tickCount={4}
-                    tickMargin={16}
-                    tickFormatter={(value) => `${value}°`}
+                    tickMargin={8}
                 />
 
                 <ChartTooltip
@@ -63,19 +56,10 @@ export const OverviewChart = () => {
                     content={<ChartTooltipContent />}
                 />
 
-                <defs>
-                    <linearGradient id='fillTemp' x1={0} y1={0} x2={0} y2={1}>
-                        <stop offset='0%' stopColor='var(--temp-high)' stopOpacity={1} />
-                        <stop offset='50%' stopColor='var(--temp-mid)' stopOpacity={1} />
-                        <stop offset='100%' stopColor='var(--temp-low)' stopOpacity={1} />
-                    </linearGradient>
-                </defs>
-
-                <Area dataKey='temp' type='natural' fill='url(#fillTemp)' fillOpacity={0.5} stroke='var(--color-temp)' strokeOpacity={0} />
-                <Area dataKey='feels' type='natural' fillOpacity={0} stroke='var(--color-feels)' strokeOpacity={2} activeDot={false} />
+                <Bar dataKey='clouds' fill='var(--color-clouds)' stroke='var(--color-clouds)' radius={[100, 100, 0, 0]} />
 
                 <ChartLegend content={<ChartLegendContent />} />
-            </AreaChart>
+            </BarChart>
         </ChartContainer>
     );
 }

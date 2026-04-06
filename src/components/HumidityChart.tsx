@@ -8,24 +8,24 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { ChartConfig } from "@/components/ui/chart";
 
 const chartConfig = {
-    temp: {
-        label: 'Temperature',
-        color: 'var(--chart-1)',
+    humidity: {
+        label: 'Humidity',
+        color: 'var(--humidity)',
     },
-    feels: {
-        label: 'Feels like',
-        color: 'var(--muted-foreground)',
+    dew_point: {
+        label: 'Dew point',
+        color: 'var(--dew-point)',
     }
 } satisfies ChartConfig
 
-export const OverviewChart = () => {
+export const HumidityChart = () => {
     const { weather } = useWeather();
 
     const chartData = useMemo(() => {
         return weather?.hourly.map((item) => ({
             hour: item.dt,
-            temp: item.temp.toFixed(),
-            feels: item.feels_like.toFixed(),
+            humidity: item.humidity,
+            dew_point: item.dew_point,
         }));
     }, [weather]);
 
@@ -50,12 +50,11 @@ export const OverviewChart = () => {
                 />
 
                 <YAxis
-                    dataKey='temp'
+                    dataKey='humidity'
                     tickLine={false}
                     axisLine={false}
-                    tickCount={4}
+                    tickCount={5}
                     tickMargin={16}
-                    tickFormatter={(value) => `${value}°`}
                 />
 
                 <ChartTooltip
@@ -64,15 +63,14 @@ export const OverviewChart = () => {
                 />
 
                 <defs>
-                    <linearGradient id='fillTemp' x1={0} y1={0} x2={0} y2={1}>
-                        <stop offset='0%' stopColor='var(--temp-high)' stopOpacity={1} />
-                        <stop offset='50%' stopColor='var(--temp-mid)' stopOpacity={1} />
-                        <stop offset='100%' stopColor='var(--temp-low)' stopOpacity={1} />
+                    <linearGradient id='fillHumidity' x1={0} y1={0} x2={0} y2={1}>
+                        <stop offset='0%' stopColor='var(--color-humidity)' stopOpacity={1} />
+                        <stop offset='100%' stopColor='var(--color-humidity)' stopOpacity={0} />
                     </linearGradient>
                 </defs>
 
-                <Area dataKey='temp' type='natural' fill='url(#fillTemp)' fillOpacity={0.5} stroke='var(--color-temp)' strokeOpacity={0} />
-                <Area dataKey='feels' type='natural' fillOpacity={0} stroke='var(--color-feels)' strokeOpacity={2} activeDot={false} />
+                <Area dataKey='humidity' type='natural' fill='url(#fillHumidity)' fillOpacity={0.5} stroke='var(--color-humidity)' strokeOpacity={0} />
+                <Area dataKey='dew_point' type='natural' fillOpacity={0} stroke='var(--color-dew_point)' strokeOpacity={2} activeDot={false} />
 
                 <ChartLegend content={<ChartLegendContent />} />
             </AreaChart>
