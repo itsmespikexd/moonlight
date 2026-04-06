@@ -1,4 +1,6 @@
 import { SearchDialog } from "@/components/SearchDialog";
+import { ThemeDropdown } from "@/components/ThemeDropdown";
+import { UnitDropdown } from "@/components/UnitDropdown";
 
 import { Logo } from "@/assets/Logo";
 
@@ -11,6 +13,12 @@ export const TopAppBar = () => {
             <Logo />
 
             <SearchDialog />
+
+            <div className="flex gap-2">
+                <ThemeDropdown />
+
+                <UnitDropdown />
+            </div>
         </header>
     </div>
     )
